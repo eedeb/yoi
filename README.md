@@ -8,17 +8,44 @@ Live at <https://yoi.eedeb.dev>
 ## Structure
 
 ```
-index.html          About Us — serves as the homepage
-news.html           Field dispatches (Haiti, Kenya)
-get-involved.html   Programs, cost breakdown, contact
-gallery.html        NOT YET BUILT — see "Outstanding" below
-site.css            All styling for every page
-site.js             Scroll reveals + auto-updating copyright year
-YOIBrochure.pdf     Linked from index.html and get-involved.html
+index.html            About Us — serves as the homepage
+news.html             Field dispatches (Haiti, Kenya)
+get-involved.html     Programs, cost breakdown, contact
+gallery.html          NOT YET BUILT — see "Outstanding" below
+site.css              All styling for every page
+site.js               Scroll reveals + auto-updating copyright year
+YOIBrochure.pdf       The printed brochure; linked from index and get-involved,
+                      and the source of record for the copy and the logo
+assets/               Logo artwork and icons (generated — see below)
+tools/extract-logo.py Regenerates assets/ from the brochure
+.nojekyll             Tells GitHub Pages to serve the files as-is
 ```
 
-Everything is flat in one directory. `site.css` and `site.js` are shared by all
-pages, so a change to either affects the whole site.
+The pages are flat in one directory. `site.css` and `site.js` are shared by all
+of them, so a change to either affects the whole site.
+
+## Logo assets
+
+There is no vector original. The only clean copy of the lockup is a raster on
+the brochure's front panel, printed over a soft cream vignette, so it can't
+simply be cropped out — the background is estimated and divided away.
+`tools/extract-logo.py` does that and writes:
+
+```
+assets/yoi-logo.png         full stacked lockup (mark + wordmark)
+assets/yoi-mark.png         the YOI mark alone, stethoscope tube painted out
+assets/favicon.png          64px icon
+assets/apple-touch-icon.png 180px icon
+assets/yoi-header.png       the old site's horizontal header banner, unused
+```
+
+Rerun it with `python3 tools/extract-logo.py` (needs pymupdf, pillow, numpy).
+
+**The keyed artwork only works on a light surface.** Alpha was recovered by
+measuring how far each pixel falls below the paper behind it, which means the
+logo's dark gradient is partly carried in the alpha channel rather than the
+colour. On parchment it composites exactly; on `--espresso` the letterforms
+would wash out. Do not put `yoi-logo.png` or `yoi-mark.png` on a dark band.
 
 ## Local preview
 
@@ -32,15 +59,23 @@ python3 -m http.server 8000
 
 ## Deploy
 
-Copy the tracked files to the web root:
+### GitHub Pages
+
+Push to `main`, then set Settings → Pages → Source to `main` / `/ (root)`. Every
+path in the markup is relative, so the site works both at `user.github.io/yoi/`
+and at a custom domain. `.nojekyll` keeps Pages from running the files through
+Jekyll; leave it in place.
+
+### Copying to a server
 
 ```bash
 rsync -av --delete \
   --exclude '.git' --exclude '.gitignore' --exclude 'README.md' \
+  --exclude 'tools' \
   ./ user@server:/var/www/yoi/
 ```
 
-The site sits behind Cloudflare, which caches CSS and JS aggressively. After
+That deployment sits behind Cloudflare, which caches CSS and JS aggressively. After
 deploying a change to `site.css` or `site.js`, either purge the Cloudflare cache
 or bump the version string in every page's `<link>` and `<script>` tags:
 
@@ -57,10 +92,20 @@ nothing anywhere can serve a stale copy.
 Typefaces are loaded from Google Fonts: Bricolage Grotesque (headings),
 Newsreader (body text), IBM Plex Mono (labels and small caps).
 
-Colours are defined once as custom properties at the top of `site.css`. The
-palette derives from the original 2009 site's khaki and brown, sharpened into
-deep pine green, water blue and ochre. One accent colour per programme area:
-green for clinics, blue for water, ochre for food.
+Colours are defined once as custom properties at the top of `site.css` and were
+sampled directly off the printed brochure: parchment (`--paper`), the wordmark's
+taupe, espresso for text and dark bands, and the logo's orange as the single
+accent. The brochure is a two-colour piece and the site follows it — there is no
+second hue, only a warm ramp (`--flame-deep`, `--clay`, `--ink-2`) to tell the
+three programme areas apart.
+
+`--flame` is the orange exactly as printed. It is too light to read as small
+text on parchment, so anything typographic uses `--flame-deep`; `--flame` is for
+rules, the cost figures on the dark band, and other large or graphic marks.
+
+Every section headline sits over a short orange rule, which is the brochure's
+signature. It comes from one CSS rule covering `.hero h1`, `.pagehead h1` and
+`.section-head h2` — no markup needed.
 
 `.rise` elements fade in on scroll. They only start hidden if JavaScript is
 confirmed present — an inline script in each `<head>` adds a `js` class to
@@ -82,14 +127,19 @@ Content that still needs resolving before this is fully accurate:
 
 - **Gallery page** — not yet rebuilt. Needs the original page recovered from the
   Wayback Machine, plus the photographs.
-- **Conflicting address** — the old Get Involved page listed 146 East Main
-  Street, Leola, PA 17540 in its body copy, while its own footer and every other
-  page listed 43 Breeze Way, Lancaster, PA 17602. Lancaster is used throughout.
-  Confirm which is correct; this is the address donors mail cheques to.
-- **Cost figures** — the amounts on get-involved.html ($15, $10, $20, $20) were
-  published around 2019 and should be verified against current field costs.
+- **Sixteenth country** — the brochure lists fifteen: Benin, Congo, Haiti,
+  Indonesia, Ghana, Guatemala, Kenya, Moldova, Romania, Rwanda, Sierra Leone,
+  Sudan, Uganda, United States and Zambia. The homepage marquee carries a
+  sixteenth, Malawi, flagged "Newest", and the headline and footer both say
+  sixteen. Malawi appears in no source we have. Confirm it or drop it and change
+  the count back to fifteen in `index.html`.
+- **Cost figures** — the amounts on get-involved.html ($15, $10, $20, $20) match
+  the brochure exactly, but the brochure is undated. Verify against current
+  field costs.
 - **News dates** — both dispatches are undated. Commented markup marks where a
-  date goes in each article.
+  date goes in each article. Note the dispatches cover Haiti and Kenya, while
+  the brochure's front panel names Gulu, Darfur, Freetown and Guatemala as the
+  active fields; the homepage now lists the latter.
 - **Plumpy'Nut video** — the original was Flash and is unplayable. A placeholder
   block on index.html marks where a YouTube or Vimeo embed should go.
 - **Verify before publishing** — the 501(c)(3) registration, the PayPal button
