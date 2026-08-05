@@ -365,6 +365,65 @@ input[type=image]{cursor:pointer}
 .contact .lines a:hover{border-color:var(--ink)}
 @media(max-width:820px){.contact{grid-template-columns:1fr}}
 
+/* ---------- gallery carousel ---------- */
+/* The track is a scroll-snapping strip first and a carousel second: with JS off
+   it is still swipeable and keyboard-scrollable, and .carousel-nav simply never
+   appears. site.js scrolls the same strip rather than moving the slides itself. */
+.carousel-track{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  list-style:none;margin:0;padding:0;
+  border:1px solid var(--line-strong);
+  background:var(--paper-2);
+}
+.js .carousel-track{scrollbar-width:none}
+.js .carousel-track::-webkit-scrollbar{display:none}
+.carousel-track:focus-visible{outline:2px solid var(--flame-deep);outline-offset:3px}
+
+.carousel-slide{flex:0 0 100%;scroll-snap-align:center;min-width:0}
+.carousel-slide figure{margin:0;display:flex;flex-direction:column;height:100%}
+.carousel-slide img{
+  width:100%;height:clamp(250px,45vw,500px);
+  object-fit:contain;
+  padding:clamp(1rem,3vw,2.25rem);
+}
+.carousel-slide figcaption{
+  margin-top:auto;
+  border-top:1px solid var(--line);
+  padding:1.05rem clamp(1rem,3vw,2.25rem);
+  font-size:.94rem;line-height:1.5;color:var(--ink-2);
+}
+
+.carousel-nav{display:none;align-items:center;gap:.6rem 1rem;flex-wrap:wrap;margin-top:1.25rem}
+.js .carousel-nav{display:flex}
+.carousel-btn{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;
+  background:none;border:1px solid var(--line-strong);color:var(--ink);
+  padding:.7rem 1.05rem;border-radius:2px;cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.carousel-btn:hover{background:var(--ink);color:var(--paper-2);border-color:var(--ink)}
+.carousel-count{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--ink-2);margin:0;
+}
+.carousel-dots{display:flex;gap:.55rem;margin-left:auto}
+.carousel-dot{
+  width:10px;height:10px;padding:0;border-radius:50%;cursor:pointer;
+  border:1px solid var(--taupe);background:none;transition:background .2s,border-color .2s;
+}
+.carousel-dot[aria-current=true]{background:var(--flame-deep);border-color:var(--flame-deep)}
+
+@media(max-width:560px){
+  .carousel-dots{margin-left:0;flex-basis:100%;order:3}
+  .carousel-slide img{padding:.9rem}
+  .carousel-slide figcaption{padding:.9rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .carousel-track{scroll-behavior:auto}
+}
+
 /* ---------- inline link ---------- */
 .brochure{
   display:inline-flex;align-items:center;gap:.7rem;

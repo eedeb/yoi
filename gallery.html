@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>News — Youth Outreach International</title>
-<meta name="description" content="Updates from the field: a shipping container of food and medical supplies for northern Haiti, and solar power for the Maisha Academy clinic and girls' dorm in Kenya." />
-<meta property="og:title" content="News — Youth Outreach International" />
-<meta property="og:description" content="Updates from Haiti and from Maisha Academy in Kenya." />
+<title>Gallery — Youth Outreach International</title>
+<meta name="description" content="Photographs from the field: children at an outreach site, a clinic visit, and a delivery of medical supplies." />
+<meta property="og:title" content="Gallery — Youth Outreach International" />
+<meta property="og:description" content="Photographs from the places Youth Outreach International works." />
 <meta property="og:type" content="website" />
 
 <link rel="icon" href="assets/favicon.png" type="image/png">
@@ -28,8 +28,8 @@
     </a>
     <nav>
       <a href="index.html">About</a>
-      <a href="news.html" aria-current="page">News</a>
-      <a href="gallery.html">Gallery</a>
+      <a href="news.html">News</a>
+      <a href="gallery.html" aria-current="page">Gallery</a>
       <a href="get-involved.html">Get involved</a>
     </nav>
     <a href="#give" class="give-link">Donate</a>
@@ -40,54 +40,61 @@
 
   <div class="pagehead">
     <div class="wrap">
-      <p class="eyebrow">From the field</p>
-      <h1>What's happening, and where.</h1>
-      <p>Short reports from the places we work — what shipped, what got built, and what changed for the people there.</p>
+      <p class="eyebrow">Gallery</p>
+      <h1>The people this is all for.</h1>
+      <p>Photographs from the places we work. These four are the ones printed in our brochure — the originals from the old website have not been recovered yet.</p>
     </div>
   </div>
 
-  <section class="dispatches">
+  <section>
     <div class="wrap">
 
-      <!-- ================= HAITI ================= -->
-      <!-- To add a date, put it inside the .dispatch-meta block:
-           <span class="date">October 2019</span>                       -->
-      <article class="dispatch rise">
-        <div class="dispatch-meta">
-          <span class="place">Haiti</span>
-        </div>
-        <div>
-          <h2>A 40-foot container, cleared and moving</h2>
-          <div class="dispatch-body">
-            <p>Haiti continues to be a challenge, but the work there goes on: clean water and food for children. We recently finished shipping a 40-foot container, and it was picked up from customs right away — which almost never happens.</p>
-            <p>Inside was food and medical supplies. All of it went to three villages in the northern region hit by the earthquake, distributed on the ground by local church leaders who know exactly which families need what.</p>
-          </div>
-        </div>
-      </article>
+      <div class="carousel rise" data-carousel
+           role="region" aria-roledescription="carousel"
+           aria-label="Photographs from the field">
+        <!-- The track is a plain scroll-snapping strip, so it stays swipeable
+             and keyboard-scrollable even if site.js never loads. The buttons
+             below are revealed only once JS is confirmed present. -->
+        <ul class="carousel-track" tabindex="0">
+          <li class="carousel-slide">
+            <figure>
+              <img src="Photos/children-waving.jpg" width="457" height="313"
+                   alt="A group of children outdoors, one of them waving at the camera.">
+              <figcaption>Children at an outreach site. One of the boys has spotted the camera.</figcaption>
+            </figure>
+          </li>
+          <li class="carousel-slide">
+            <figure>
+              <img src="Photos/clinic-visit.jpg" width="470" height="296" loading="lazy"
+                   alt="A doctor kneeling to examine a small child lying on a mat while nurses in pink uniforms assist.">
+              <figcaption>A doctor examining a severely malnourished child, with nursing staff assisting.</figcaption>
+            </figure>
+          </li>
+          <li class="carousel-slide">
+            <figure>
+              <img src="Photos/children-listening.png" width="320" height="320" loading="lazy"
+                   alt="A young child with her hands over her ears, standing in a crowd of other children.">
+              <figcaption>Printed as a circle in the brochure, and kept that way here — a rectangular crop would lose the children at the edges.</figcaption>
+            </figure>
+          </li>
+          <li class="carousel-slide">
+            <figure>
+              <img src="Photos/supplies-delivered.jpg" width="443" height="156" loading="lazy"
+                   alt="Clinic staff and a doctor gathered around a large carton of supplies being handed over.">
+              <figcaption>A carton of medicines and supplies handed over to clinic staff.</figcaption>
+            </figure>
+          </li>
+        </ul>
 
-      <!-- ================= KENYA ================= -->
-      <article class="dispatch rise">
-        <div class="dispatch-meta">
-          <span class="place">Kenya</span>
+        <div class="carousel-nav">
+          <button type="button" class="carousel-btn" data-carousel-prev>← Previous</button>
+          <button type="button" class="carousel-btn" data-carousel-next>Next →</button>
+          <p class="carousel-count" aria-live="polite"></p>
+          <div class="carousel-dots"></div>
         </div>
-        <div>
-          <h2>Maisha Academy tops its zone — and its clinic goes solar</h2>
-          <div class="dispatch-body">
-            <p>We continue to support Maisha Academy in Kenya. The school serves orphans and local families alike, and it is now being recognized as one of the best in its region. When the eighth graders sat their national exams, Maisha ranked first in our zone and fifth across Kisumu East.</p>
+      </div>
 
-            <dl class="stats">
-              <div><dt>Students educated</dt><dd>500</dd></div>
-              <div><dt>Meals served this year</dt><dd>100,000+</dd></div>
-              <div><dt>National exam rank, zone</dt><dd>1st</dd></div>
-              <div><dt>Rank, Kisumu East</dt><dd>5th</dd></div>
-            </dl>
-
-            <p style="margin-top:2rem">The solar power we supplied for the new girls' dormitory does two things at once: it makes the dorm safer at night, and it lets the girls study after dark.</p>
-            <p>We also put solar on the three-year-old clinic, so vaccine refrigeration finally holds a steady temperature. That single change qualified the clinic for National Health Insurance Fund accreditation, which means villagers can now get affordable care there. For the Maisha Medical Clinic, it is a large step toward standing on its own.</p>
-          </div>
-        </div>
-      </article>
-
+      <a class="brochure rise" href="YOIBrochure.pdf" target="_blank" rel="noopener">Read our brochure (PDF) →</a>
     </div>
   </section>
 
@@ -95,7 +102,7 @@
     <div class="wrap">
       <div class="section-head rise">
         <p class="eyebrow">Give</p>
-        <h2>Containers, wells and solar panels all start the same way.</h2>
+        <h2>Every one of these children was reached by someone's gift.</h2>
         <p>Every gift is tax-deductible. <a href="get-involved.html">See what a gift covers →</a></p>
       </div>
 

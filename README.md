@@ -8,17 +8,19 @@ Live at <https://yoi.eedeb.dev>
 ## Structure
 
 ```
-index.html            About Us — serves as the homepage
-news.html             Field dispatches (Haiti, Kenya)
-get-involved.html     Programs, cost breakdown, contact
-gallery.html          NOT YET BUILT — see "Outstanding" below
-site.css              All styling for every page
-site.js               Scroll reveals + auto-updating copyright year
-YOIBrochure.pdf       The printed brochure; linked from index and get-involved,
-                      and the source of record for the copy and the logo
-assets/               Logo artwork and icons (generated — see below)
-tools/extract-logo.py Regenerates assets/ from the brochure
-.nojekyll             Tells GitHub Pages to serve the files as-is
+index.html              About Us — serves as the homepage
+news.html               Field dispatches (Haiti, Kenya)
+get-involved.html       Programs, cost breakdown, contact
+gallery.html            Photo carousel
+site.css                All styling for every page
+site.js                 Copyright year, scroll reveals, gallery carousel
+YOIBrochure.pdf         The printed brochure; linked from three pages, and the
+                        source of record for the copy, the logo and the photos
+assets/                 Logo artwork and icons (generated — see below)
+Photos/                 Field photographs (generated — see below)
+tools/extract-logo.py   Regenerates assets/ from the brochure
+tools/extract-photos.py Regenerates Photos/ from the brochure
+.nojekyll               Tells GitHub Pages to serve the files as-is
 ```
 
 The pages are flat in one directory. `site.css` and `site.js` are shared by all
@@ -46,6 +48,32 @@ measuring how far each pixel falls below the paper behind it, which means the
 logo's dark gradient is partly carried in the alpha channel rather than the
 colour. On parchment it composites exactly; on `--espresso` the letterforms
 would wash out. Do not put `yoi-logo.png` or `yoi-mark.png` on a dark band.
+
+## Photographs
+
+The brochure carries four photographs and they are the only ones we have.
+Like the logo they are not separate embedded files — the brochure is stored as
+flattened full-page rasters — so `tools/extract-photos.py` cuts them out of the
+composited page at 1:1 pixels and writes `Photos/`:
+
+```
+Photos/children-waving.jpg      457 × 313
+Photos/clinic-visit.jpg         470 × 296
+Photos/children-listening.png   320 × 320, circular, transparent corners
+Photos/supplies-delivered.jpg   443 × 156
+```
+
+Two things about the crops. Each photograph is feathered into the paper by the
+layout, so the rectangles in the script sit just inside the solid part of the
+picture — the soft edge is a brochure device, not part of the photograph, and
+including it would put a pale halo around every slide. And the third is printed
+as a circle; it is kept round, on transparency, because a rectangular crop of
+the same picture loses the children at the edges of the frame.
+
+They cap out around 450px wide. The brochure's own rasters are 1639px across an
+11-inch sheet, roughly 150dpi, so there is no more detail to recover — that is
+the ceiling, not a setting. If the original photographs ever turn up, replace
+the files and delete the script.
 
 ## Local preview
 
@@ -80,8 +108,8 @@ deploying a change to `site.css` or `site.js`, either purge the Cloudflare cache
 or bump the version string in every page's `<link>` and `<script>` tags:
 
 ```html
-<link href="site.css?v=4" rel="stylesheet">
-<script src="site.js?v=4"></script>
+<link href="site.css?v=5" rel="stylesheet">
+<script src="site.js?v=5"></script>
 ```
 
 Bumping the version is the more reliable of the two — it makes the URL new, so
@@ -112,6 +140,15 @@ confirmed present — an inline script in each `<head>` adds a `js` class to
 `<html>`, and the hiding rule is scoped to `.js .rise`. If `site.js` fails to
 load, content still renders. Do not remove that inline script.
 
+The gallery carousel is a native scroll-snapping strip, not a slideshow. CSS
+does the snapping and `site.js` only scrolls the strip and keeps the dots and
+counter in step with wherever it actually is, so swiping, arrow keys and the
+buttons can never disagree about which photo is showing. With JavaScript off
+the strip still scrolls and swipes; `.carousel-nav` is scoped to `.js` and
+simply never appears. Stepping between neighbouring photos glides, but wrapping
+past either end jumps, since animating that would rewind through every slide in
+between.
+
 The country marquee on the homepage duplicates its list in the markup; both
 copies translate left by 100% of their own width, which makes the loop seamless.
 The second copy is `aria-hidden` so screen readers announce each country once.
@@ -125,8 +162,12 @@ Typography steps down at 560px and again at 360px.
 
 Content that still needs resolving before this is fully accurate:
 
-- **Gallery page** — not yet rebuilt. Needs the original page recovered from the
-  Wayback Machine, plus the photographs.
+- **Gallery photographs** — the page is built, but the only photographs we have
+  are the four lifted out of the brochure, and they are small. The original
+  gallery from the old site has not been recovered from the Wayback Machine.
+  None of the four is captioned in the brochure, so the captions on the page
+  describe what is visible and claim no country or date; if anyone can identify
+  the places or the people, the captions should say so.
 - **Sixteenth country** — the brochure lists fifteen: Benin, Congo, Haiti,
   Indonesia, Ghana, Guatemala, Kenya, Moldova, Romania, Rwanda, Sierra Leone,
   Sudan, Uganda, United States and Zambia. The homepage marquee carries a
