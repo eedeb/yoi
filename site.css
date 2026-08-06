@@ -383,21 +383,24 @@ input[type=image]{cursor:pointer}
 .carousel-track:focus-visible{outline:2px solid var(--flame-deep);outline-offset:3px}
 
 .carousel-slide{flex:0 0 100%;scroll-snap-align:center;min-width:0}
-.carousel-slide figure{margin:0;display:flex;flex-direction:column;height:100%}
+/* Photos come from a folder, so they arrive at any size or shape. A fixed
+   stage height plus object-fit means the frame never moves between them. */
 .carousel-slide img{
   width:100%;height:clamp(250px,45vw,500px);
   object-fit:contain;
   padding:clamp(1rem,3vw,2.25rem);
 }
-.carousel-slide figcaption{
-  margin-top:auto;
-  border-top:1px solid var(--line);
-  padding:1.05rem clamp(1rem,3vw,2.25rem);
-  font-size:.94rem;line-height:1.5;color:var(--ink-2);
+
+.carousel-empty{
+  border:1px solid var(--line-strong);background:var(--paper-2);
+  padding:clamp(1.4rem,3vw,2rem);margin:0;
+  font-size:.95rem;color:var(--ink-2);
 }
+.carousel-empty code{font-family:var(--mono);font-size:.88em}
 
 .carousel-nav{display:none;align-items:center;gap:.6rem 1rem;flex-wrap:wrap;margin-top:1.25rem}
 .js .carousel-nav{display:flex}
+.js .carousel-nav[hidden]{display:none}
 .carousel-btn{
   font-family:var(--mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;
   background:none;border:1px solid var(--line-strong);color:var(--ink);
@@ -418,7 +421,6 @@ input[type=image]{cursor:pointer}
 @media(max-width:560px){
   .carousel-dots{margin-left:0;flex-basis:100%;order:3}
   .carousel-slide img{padding:.9rem}
-  .carousel-slide figcaption{padding:.9rem}
 }
 @media(prefers-reduced-motion:reduce){
   .carousel-track{scroll-behavior:auto}

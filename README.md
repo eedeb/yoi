@@ -17,9 +17,12 @@ site.js                 Copyright year, scroll reveals, gallery carousel
 YOIBrochure.pdf         The printed brochure; linked from three pages, and the
                         source of record for the copy, the logo and the photos
 assets/                 Logo artwork and icons (generated — see below)
-Photos/                 Field photographs (generated — see below)
+Photos/                 The gallery. Whatever is in here is what the page shows
+photos.json             Index of Photos/, for hosts that can't list a directory
 tools/extract-logo.py   Regenerates assets/ from the brochure
-tools/extract-photos.py Regenerates Photos/ from the brochure
+tools/extract-photos.py Pulls the brochure's four photographs into Photos/
+tools/build-photo-manifest.py   Rewrites photos.json from Photos/
+.github/workflows/photos.yml    Reruns that on every push touching Photos/
 .nojekyll               Tells GitHub Pages to serve the files as-is
 ```
 
@@ -49,41 +52,66 @@ logo's dark gradient is partly carried in the alpha channel rather than the
 colour. On parchment it composites exactly; on `--espresso` the letterforms
 would wash out. Do not put `yoi-logo.png` or `yoi-mark.png` on a dark band.
 
-## Photographs
+## The gallery
 
-The brochure carries four photographs and they are the only ones we have.
-Like the logo they are not separate embedded files — the brochure is stored as
-flattened full-page rasters — so `tools/extract-photos.py` cuts them out of the
-composited page at 1:1 pixels and writes `Photos/`:
+**To add a photo, put the file in `Photos/`.** Nothing else. No list to edit,
+no markup to touch. `gallery.html` ships with an empty track and `site.js`
+fills it from whatever is in the folder. Remove a file and it's gone; rename
+files to reorder them, since they sort by name with numbers read as numbers
+(so `2` comes before `10`, and an `01-` prefix is enough to arrange them).
 
-```
-Photos/children-waving.jpg      457 × 313
-Photos/clinic-visit.jpg         470 × 296
-Photos/children-listening.png   320 × 320, circular, transparent corners
-Photos/supplies-delivered.jpg   443 × 156
-```
+Filenames double as alt text — `children-waving.jpg` is announced as "Children
+waving" — so a descriptive filename is how you describe a photo to somebody
+using a screen reader. A camera's `IMG_4821.jpg` reads as itself, which is no
+worse than nothing. Any leading number is stripped, so ordering prefixes are
+not read out. `jpg`, `png`, `gif`, `webp`, `avif` and `svg` are picked up.
 
-Two things about the crops. Each photograph is feathered into the paper by the
-layout, so the rectangles in the script sit just inside the solid part of the
-picture — the soft edge is a brochure device, not part of the photograph, and
-including it would put a pale halo around every slide. And the third is printed
-as a circle; it is kept round, on transparency, because a rectangular crop of
-the same picture loses the children at the edges of the frame.
+### How it finds them
+
+A browser cannot read a directory off a static host, so it takes two goes:
+
+1. **Ask the server for the folder.** Any host with directory listings on —
+   including `python3 -m http.server` below — answers with a page of links,
+   which is always current. Locally this is the whole story: drop a file in,
+   reload, there it is.
+2. **Fall back to `photos.json`.** GitHub Pages serves no listings and 404s
+   that first request, which is harmless but does show up in the network panel.
+   `tools/build-photo-manifest.py` writes the file, and the Photos workflow
+   reruns it on every push that touches `Photos/` and commits the result — so
+   a photo uploaded through the GitHub web interface appears on its own, once
+   the action and the Pages deploy finish. Run the script by hand if you want
+   the manifest to match before committing.
+
+The workflow only watches `Photos/` and only ever writes `photos.json` at the
+repo root, so the commit it makes cannot set it off again.
+
+### The four that came with it
+
+`Photos/` starts out with the four photographs printed in the brochure.
+`tools/extract-photos.py` cut them out of the composited pages at 1:1 pixels —
+like the logo they are not separate embedded files. Two notes on those crops.
+Each is feathered into the paper by the layout, so the rectangles in the script
+sit just inside the solid part of the picture; including the soft edge would
+put a pale halo around the slide. And one is printed as a circle, kept round on
+transparency, because a rectangular crop of it loses the children at the edges.
 
 They cap out around 450px wide. The brochure's own rasters are 1639px across an
 11-inch sheet, roughly 150dpi, so there is no more detail to recover — that is
-the ceiling, not a setting. If the original photographs ever turn up, replace
-the files and delete the script.
+the ceiling, not a setting. Replacing them is just a matter of dropping better
+files into the folder.
 
 ## Local preview
 
-Open `index.html` directly in a browser, or run a local server so paths behave
-exactly as they do in production:
+Run a local server rather than opening the files directly — the gallery reads
+the `Photos` folder over HTTP and cannot do that from a `file://` page:
 
 ```bash
 python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
+
+This server lists directories, so the gallery picks up anything you drop into
+`Photos/` the moment you reload. Every other page is fine opened directly.
 
 ## Deploy
 
@@ -99,17 +127,21 @@ Jekyll; leave it in place.
 ```bash
 rsync -av --delete \
   --exclude '.git' --exclude '.gitignore' --exclude 'README.md' \
-  --exclude 'tools' \
+  --exclude 'tools' --exclude '.github' \
   ./ user@server:/var/www/yoi/
 ```
+
+Ship `photos.json` — it is what the gallery falls back to when the host does
+not list directories. Run `tools/build-photo-manifest.py` before deploying if
+`Photos/` changed, since nothing outside GitHub runs the workflow.
 
 That deployment sits behind Cloudflare, which caches CSS and JS aggressively. After
 deploying a change to `site.css` or `site.js`, either purge the Cloudflare cache
 or bump the version string in every page's `<link>` and `<script>` tags:
 
 ```html
-<link href="site.css?v=5" rel="stylesheet">
-<script src="site.js?v=5"></script>
+<link href="site.css?v=6" rel="stylesheet">
+<script src="site.js?v=6"></script>
 ```
 
 Bumping the version is the more reliable of the two — it makes the URL new, so
@@ -143,11 +175,21 @@ load, content still renders. Do not remove that inline script.
 The gallery carousel is a native scroll-snapping strip, not a slideshow. CSS
 does the snapping and `site.js` only scrolls the strip and keeps the dots and
 counter in step with wherever it actually is, so swiping, arrow keys and the
-buttons can never disagree about which photo is showing. With JavaScript off
-the strip still scrolls and swipes; `.carousel-nav` is scoped to `.js` and
-simply never appears. Stepping between neighbouring photos glides, but wrapping
-past either end jumps, since animating that would rewind through every slide in
-between.
+buttons can never disagree about which photo is showing. Stepping between
+neighbouring photos glides, but wrapping past either end jumps, since animating
+that would rewind through every slide in between. Note that the jump has to ask
+for `behavior: 'instant'` — `'auto'` defers to the CSS `scroll-behavior`, which
+is smooth here, so it would animate the very case meant to skip animating.
+
+The gallery is the one page that needs JavaScript, because reading the folder
+is what puts the photos there; it says so in a `<noscript>` rather than showing
+an empty frame. Everything else on the site still renders without it.
+
+Photos arrive from a folder at any size or shape, so the slide sets a fixed
+height and uses `object-fit: contain`. The frame never moves between photos and
+nothing shifts as they load, which is also why the images carry no `width` and
+`height` attributes — their real dimensions are not known until they arrive and
+would not change the layout anyway.
 
 The country marquee on the homepage duplicates its list in the markup; both
 copies translate left by 100% of their own width, which makes the loop seamless.
@@ -162,12 +204,11 @@ Typography steps down at 560px and again at 360px.
 
 Content that still needs resolving before this is fully accurate:
 
-- **Gallery photographs** — the page is built, but the only photographs we have
-  are the four lifted out of the brochure, and they are small. The original
-  gallery from the old site has not been recovered from the Wayback Machine.
-  None of the four is captioned in the brochure, so the captions on the page
-  describe what is visible and claim no country or date; if anyone can identify
-  the places or the people, the captions should say so.
+- **Gallery photographs** — the page is built and reads whatever is in
+  `Photos/`, but the only photographs we have are the four lifted out of the
+  brochure, and they are small. The original gallery from the old site has not
+  been recovered from the Wayback Machine. Better files can just be dropped
+  into the folder.
 - **Sixteenth country** — the brochure lists fifteen: Benin, Congo, Haiti,
   Indonesia, Ghana, Guatemala, Kenya, Moldova, Romania, Rwanda, Sierra Leone,
   Sudan, Uganda, United States and Zambia. The homepage marquee carries a

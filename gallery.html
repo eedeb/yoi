@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.className+=" js";</script>
-<link href="site.css?v=5" rel="stylesheet">
+<link href="site.css?v=6" rel="stylesheet">
 </head>
 <body>
 
@@ -42,49 +42,21 @@
     <div class="wrap">
       <p class="eyebrow">Gallery</p>
       <h1>The people this is all for.</h1>
-      <p>Photographs from the places we work. These four are the ones printed in our brochure — the originals from the old website have not been recovered yet.</p>
+      <p>Photographs from the places we work.</p>
     </div>
   </div>
 
   <section>
     <div class="wrap">
 
-      <div class="carousel rise" data-carousel
+      <!-- There is no list of photos here on purpose. site.js fills the track
+           from whatever is sitting in Photos/ — see the comment there for how
+           it finds out. To add a photo, put the file in Photos/ and reload;
+           to reorder them, rename them (they sort by filename). -->
+      <div class="carousel rise" data-carousel data-photos="Photos/"
            role="region" aria-roledescription="carousel"
            aria-label="Photographs from the field">
-        <!-- The track is a plain scroll-snapping strip, so it stays swipeable
-             and keyboard-scrollable even if site.js never loads. The buttons
-             below are revealed only once JS is confirmed present. -->
-        <ul class="carousel-track" tabindex="0">
-          <li class="carousel-slide">
-            <figure>
-              <img src="Photos/children-waving.jpg" width="457" height="313"
-                   alt="A group of children outdoors, one of them waving at the camera.">
-              <figcaption>Children at an outreach site. One of the boys has spotted the camera.</figcaption>
-            </figure>
-          </li>
-          <li class="carousel-slide">
-            <figure>
-              <img src="Photos/clinic-visit.jpg" width="470" height="296" loading="lazy"
-                   alt="A doctor kneeling to examine a small child lying on a mat while nurses in pink uniforms assist.">
-              <figcaption>A doctor examining a severely malnourished child, with nursing staff assisting.</figcaption>
-            </figure>
-          </li>
-          <li class="carousel-slide">
-            <figure>
-              <img src="Photos/children-listening.png" width="320" height="320" loading="lazy"
-                   alt="A young child with her hands over her ears, standing in a crowd of other children.">
-              <figcaption>Printed as a circle in the brochure, and kept that way here — a rectangular crop would lose the children at the edges.</figcaption>
-            </figure>
-          </li>
-          <li class="carousel-slide">
-            <figure>
-              <img src="Photos/supplies-delivered.jpg" width="443" height="156" loading="lazy"
-                   alt="Clinic staff and a doctor gathered around a large carton of supplies being handed over.">
-              <figcaption>A carton of medicines and supplies handed over to clinic staff.</figcaption>
-            </figure>
-          </li>
-        </ul>
+        <ul class="carousel-track" tabindex="0"></ul>
 
         <div class="carousel-nav">
           <button type="button" class="carousel-btn" data-carousel-prev>← Previous</button>
@@ -92,7 +64,15 @@
           <p class="carousel-count" aria-live="polite"></p>
           <div class="carousel-dots"></div>
         </div>
+
+        <p class="carousel-empty" data-carousel-empty hidden>
+          No photographs yet. Add image files to the <code>Photos</code> folder and reload.
+        </p>
       </div>
+
+      <noscript>
+        <p class="carousel-empty">The gallery reads the <code>Photos</code> folder when the page loads, so it needs JavaScript switched on. Everything else on this site works without it.</p>
+      </noscript>
 
       <a class="brochure rise" href="YOIBrochure.pdf" target="_blank" rel="noopener">Read our brochure (PDF) →</a>
     </div>
@@ -167,6 +147,6 @@
   </div>
 </footer>
 
-<script src="site.js?v=5"></script>
+<script src="site.js?v=6"></script>
 </body>
 </html>

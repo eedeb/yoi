@@ -1,0 +1,38 @@
+name: Photo manifest
+
+# GitHub Pages cannot list a directory, so the gallery falls back to
+# photos.json. This keeps that file in step with the Photos folder: add a photo
+# through the web interface or a push, and the gallery picks it up without
+# anyone editing a list by hand.
+#
+# The trigger only watches Photos/, and the job only ever writes photos.json at
+# the repo root, so the commit it makes cannot set the workflow off again.
+
+on:
+  push:
+    branches: [main]
+    paths: ['Photos/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: python3 tools/build-photo-manifest.py
+
+      - name: Commit the manifest if it changed
+        run: |
+          if [ -n "$(git status --porcelain photos.json)" ]; then
+            git config user.name  'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add photos.json
+            git commit -m 'Rebuild photo manifest'
+            git push
+          else
+            echo 'photos.json already up to date'
+          fi
