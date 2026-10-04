@@ -123,10 +123,10 @@ workflow only fixes what the site serves, not the history.** A photo uploaded
 as-is is still in the commit that added it, GPS and all. To keep a location out
 of the repository entirely, run the script before committing.
 
-Four prints in the archive were photographed lying flat and came out sideways,
+Five prints in the archive were photographed lying flat and came out sideways,
 and one entry was a screenshot of an email; those were rotated and cropped by
-hand during the import. Their numbers are 50, 51, 55, 62 and 65 in
-`Blast from the Past`.
+hand during the import. Their numbers are 50, 51, 54, 55, 62 and 65 in
+`Blast from the Past`; `Haiti/07.jpg`, a photo of a wall map, was rotated too.
 
 ### How the gallery finds them
 
@@ -249,25 +249,35 @@ Typography steps down at 560px and again at 360px.
 
 ## Where the copy comes from
 
-The ministry stories, the introduction and the history were rewritten in
-October 2026 from an update written by the ministry ("claude update yoi.pdf"),
-which also asked for the 96% giving note. The brochure's vision and mission
-statements still stand on the home page.
+The home, ministries and history pages are built from an October 2026 update
+written by the ministry ("claude update yoi.pdf"). **Its text is used word for
+word**, changed only to fix grammar and punctuation. Do not paraphrase it. The
+only places it is not verbatim are the ones the update itself asked for:
+
+- the opening paragraph on the home page, which combines its two introductory
+  paragraphs into a shorter version (the full text is on history.html);
+- the short summary on each ministry card on the home page;
+- Haiti's section, which it asked to have reorganized, with the goat program
+  condensed;
+- the note that about 96% of donations go directly to the ministries.
+
+Everything else on the site that the update does not cover (the news
+dispatches, the brochure's vision and mission, Get Involved, contact and
+giving details) is the site's earlier copy, unchanged.
 
 ## Outstanding
 
 Content that still needs resolving before this is fully accurate:
 
-- **Puits Jacob's Facebook page** — the update linked it only as
-  "facebook.com", which goes to Facebook's front page. Until the real page
-  address is known, the button on ministries.html opens a Facebook search for
-  the school's name. Replace its `href` (there is a TODO beside it).
-- **Grace Life's books** — the update says one place that two containers held
-  13,000 books, and another that they held over 23,000. The site uses "more
-  than 23,000". Confirm which is right.
-- **Project Peanut Butter** — the update calls it "The Peanut Butter Project";
-  the DVD in the archive photos is titled "The Story of Project Peanut Butter",
-  which is the name the history page uses. Confirm.
+- **Grace Life's books** — the update says in one place that the library
+  received 13,000 Christian books and in another that two containers held over
+  23,000. Both are printed as written. Confirm which is right.
+- **The Peanut Butter Project** — printed as the update names it. The DVD in
+  the archive photos is titled "The Story of Project Peanut Butter". Confirm.
+- **Get Involved** — still the site's earlier copy. It offers short-term
+  missions trips ("Travel with us to the places we work") and costs from the
+  undated brochure, while the update says YOI is no longer traveling. Decide
+  whether to replace it with the needs listed in the update.
 - **Sixteenth country** — the brochure lists fifteen countries where YOI
   supported clinics. The history page's list carries a sixteenth, Malawi, which
   came from the old website and appears in no other source (Project Peanut
