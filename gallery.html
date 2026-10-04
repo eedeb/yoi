@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gallery — Youth Outreach International</title>
-<meta name="description" content="Photographs from the field: children at an outreach site, a clinic visit, and a delivery of medical supplies." />
+<meta name="description" content="Photographs from Grace Life in Situma, Kenya, from Maisha in Kenya and from Haiti — and from the archive, a blast from the past." />
 <meta property="og:title" content="Gallery — Youth Outreach International" />
 <meta property="og:description" content="Photographs from the places Youth Outreach International works." />
 <meta property="og:type" content="website" />
@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.className+=" js";</script>
-<link href="site.css?v=6" rel="stylesheet">
+<link href="site.css?v=7" rel="stylesheet">
 </head>
 <body>
 
@@ -48,31 +48,127 @@
 
   <section>
     <div class="wrap">
+      <div class="section-head rise">
+        <p class="eyebrow">Current ministries</p>
+        <h2>Where the work is now.</h2>
+      </div>
 
-      <!-- There is no list of photos here on purpose. site.js fills the track
-           from whatever is sitting in Photos/ — see the comment there for how
-           it finds out. To add a photo, put the file in Photos/ and reload;
-           to reorder them, rename them (they sort by filename). -->
-      <div class="carousel rise" data-carousel data-photos="Photos/"
-           role="region" aria-roledescription="carousel"
-           aria-label="Photographs from the field">
+      <!-- Each card's picture is the cover.jpg in that ministry's folder, so
+           swapping a cover is just replacing that one file. -->
+      <div class="ministries rise">
+        <a class="ministry-card" href="#grace-life">
+          <img src="Photos/Grace%20Life/cover.jpg" alt="" width="1280" height="853">
+          <span class="ministry-meta">
+            <span class="ministry-name">Grace Life</span>
+            <span class="ministry-place">Situma, Kenya</span>
+          </span>
+        </a>
+        <a class="ministry-card" href="#maisha">
+          <img src="Photos/Maisha/cover.jpg" alt="" width="640" height="480">
+          <span class="ministry-meta">
+            <span class="ministry-name">Maisha</span>
+            <span class="ministry-place">Kenya</span>
+          </span>
+        </a>
+        <a class="ministry-card" href="#haiti">
+          <img src="Photos/Haiti/cover.jpg" alt="" width="1350" height="1800">
+          <span class="ministry-meta">
+            <span class="ministry-name">Haiti</span>
+          </span>
+        </a>
+      </div>
+
+      <noscript>
+        <p class="carousel-empty" style="margin-top:2.5rem">The photographs below are read from the <code>Photos</code> folders when the page loads, so they need JavaScript switched on. Everything else on this site works without it.</p>
+      </noscript>
+    </div>
+  </section>
+
+  <!-- There are no lists of photos below, on purpose. Each carousel names a
+       folder in data-photos and site.js fills it from whatever is in there —
+       see the comment in site.js for how it finds out. To add a photo, put
+       the file in the folder and reload; to reorder, rename (they sort by
+       filename, with cover.* always first). A new section is a copy of one of
+       these blocks pointed at a new folder. -->
+
+  <section class="gallery-section" id="grace-life">
+    <div class="wrap">
+      <div class="section-head rise">
+        <p class="eyebrow">Current ministry &nbsp;·&nbsp; Situma, Kenya</p>
+        <h2>Grace Life</h2>
+      </div>
+      <div class="carousel rise" data-carousel data-photos="Photos/Grace Life/" data-label="Grace Life"
+           role="region" aria-roledescription="carousel" aria-label="Grace Life photographs">
         <ul class="carousel-track" tabindex="0"></ul>
-
         <div class="carousel-nav">
           <button type="button" class="carousel-btn" data-carousel-prev>← Previous</button>
           <button type="button" class="carousel-btn" data-carousel-next>Next →</button>
           <p class="carousel-count" aria-live="polite"></p>
           <div class="carousel-dots"></div>
         </div>
-
-        <p class="carousel-empty" data-carousel-empty hidden>
-          No photographs yet. Add image files to the <code>Photos</code> folder and reload.
-        </p>
+        <p class="carousel-empty" data-carousel-empty hidden>No photographs here yet.</p>
       </div>
+    </div>
+  </section>
 
-      <noscript>
-        <p class="carousel-empty">The gallery reads the <code>Photos</code> folder when the page loads, so it needs JavaScript switched on. Everything else on this site works without it.</p>
-      </noscript>
+  <section class="gallery-section" id="maisha">
+    <div class="wrap">
+      <div class="section-head rise">
+        <p class="eyebrow">Current ministry &nbsp;·&nbsp; Kenya</p>
+        <h2>Maisha</h2>
+      </div>
+      <div class="carousel rise" data-carousel data-photos="Photos/Maisha/" data-label="Maisha"
+           role="region" aria-roledescription="carousel" aria-label="Maisha photographs">
+        <ul class="carousel-track" tabindex="0"></ul>
+        <div class="carousel-nav">
+          <button type="button" class="carousel-btn" data-carousel-prev>← Previous</button>
+          <button type="button" class="carousel-btn" data-carousel-next>Next →</button>
+          <p class="carousel-count" aria-live="polite"></p>
+          <div class="carousel-dots"></div>
+        </div>
+        <p class="carousel-empty" data-carousel-empty hidden>No photographs here yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-section" id="haiti">
+    <div class="wrap">
+      <div class="section-head rise">
+        <p class="eyebrow">Current ministry</p>
+        <h2>Haiti</h2>
+      </div>
+      <div class="carousel rise" data-carousel data-photos="Photos/Haiti/" data-label="Haiti"
+           role="region" aria-roledescription="carousel" aria-label="Haiti photographs">
+        <ul class="carousel-track" tabindex="0"></ul>
+        <div class="carousel-nav">
+          <button type="button" class="carousel-btn" data-carousel-prev>← Previous</button>
+          <button type="button" class="carousel-btn" data-carousel-next>Next →</button>
+          <p class="carousel-count" aria-live="polite"></p>
+          <div class="carousel-dots"></div>
+        </div>
+        <p class="carousel-empty" data-carousel-empty hidden>No photographs here yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-section" id="blast-from-the-past">
+    <div class="wrap">
+      <div class="section-head rise">
+        <p class="eyebrow">From the archive</p>
+        <h2>Blast from the Past</h2>
+        <p>Photographs, press clippings and keepsakes from earlier years of the work.</p>
+      </div>
+      <div class="carousel rise" data-carousel data-photos="Photos/Blast from the Past/" data-label="Blast from the Past"
+           role="region" aria-roledescription="carousel" aria-label="Blast from the Past photographs">
+        <ul class="carousel-track" tabindex="0"></ul>
+        <div class="carousel-nav">
+          <button type="button" class="carousel-btn" data-carousel-prev>← Previous</button>
+          <button type="button" class="carousel-btn" data-carousel-next>Next →</button>
+          <p class="carousel-count" aria-live="polite"></p>
+          <div class="carousel-dots"></div>
+        </div>
+        <p class="carousel-empty" data-carousel-empty hidden>No photographs here yet.</p>
+      </div>
 
       <a class="brochure rise" href="YOIBrochure.pdf" target="_blank" rel="noopener">Read our brochure (PDF) →</a>
     </div>
@@ -147,6 +243,6 @@
   </div>
 </footer>
 
-<script src="site.js?v=6"></script>
+<script src="site.js?v=7"></script>
 </body>
 </html>

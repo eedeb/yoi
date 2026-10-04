@@ -21,9 +21,10 @@
   }
 
   // ---- gallery ----------------------------------------------------------
-  // The gallery has no hard-coded list of photos: whatever sits in Photos/ is
-  // what shows up. Finding out what sits there takes two goes, because a
-  // static host will not let a browser read a directory:
+  // The gallery has no hard-coded list of photos: each carousel names a
+  // folder in data-photos, and whatever sits in that folder is what shows up.
+  // Finding out what sits there takes two goes, because a static host will
+  // not let a browser read a directory:
   //
   //   1. Ask the server for the folder. Any host with directory listings on —
   //      including `python3 -m http.server` from the README — answers with a
@@ -33,19 +34,24 @@
   //      tools/build-photo-manifest.py writes that file and the Photos
   //      workflow reruns it on every push that touches Photos/.
   //
-  // Photos are ordered by filename, numerically, so 2 sorts before 10 and a
-  // "01-" style prefix is enough to arrange them.
+  // A file called cover.* leads its carousel. The rest are ordered by
+  // filename, numerically, so 2 sorts before 10 and a "01-" style prefix is
+  // enough to arrange them.
 
   var IMAGE = /\.(jpe?g|png|gif|webp|avif|svg)$/i;
+  var COVER = /^cover\.[^.]+$/i;
+  var MAX_DOTS = 12;
 
   function byName(names) {
     return names.sort(function (a, b) {
+      var ca = COVER.test(a), cb = COVER.test(b);
+      if (ca !== cb) return ca ? -1 : 1;
       return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
     });
   }
 
   function fromListing(dir) {
-    return fetch(dir).then(function (r) {
+    return fetch(encodeURI(dir)).then(function (r) {
       if (!r.ok) throw new Error('no listing');
       return r.text();
     }).then(function (html) {
@@ -64,12 +70,18 @@
     });
   }
 
-  function fromManifest() {
-    return fetch('photos.json', { cache: 'no-store' }).then(function (r) {
-      if (!r.ok) throw new Error('no manifest');
-      return r.json();
-    }).then(function (list) {
-      return (list || []).filter(function (n) {
+  // One fetch of photos.json serves every carousel on the page.
+  var manifest = null;
+
+  function fromManifest(dir) {
+    if (!manifest) {
+      manifest = fetch('photos.json', { cache: 'no-store' }).then(function (r) {
+        if (!r.ok) throw new Error('no manifest');
+        return r.json();
+      });
+    }
+    return manifest.then(function (all) {
+      return ((all && all[dir]) || []).filter(function (n) {
         return typeof n === 'string' && IMAGE.test(n);
       });
     });
@@ -77,27 +89,32 @@
 
   function listPhotos(dir) {
     return fromListing(dir)
-      .catch(fromManifest)
+      .catch(function () { return fromManifest(dir); })
       .catch(function () { return []; })
       .then(byName);
   }
 
-  // Filenames double as alt text, so naming a file well is how you describe a
-  // photo. "children-waving.jpg" reads as "Children waving"; a camera's
-  // "IMG_4821.jpg" reads as itself, which is no worse than nothing.
-  function altFor(name) {
-    var base = name.replace(/\.[^.]+$/, '')
-      .replace(/[-_]+/g, ' ')
-      .replace(/^\s*\d+\s+/, '')   // drop an ordering prefix like "03 "
-      .trim();
-    if (!base) return 'Photograph';
-    return base.charAt(0).toUpperCase() + base.slice(1);
+  // A descriptive filename doubles as alt text: "children-waving.jpg" reads
+  // as "Children waving". Camera names, bare numbers and random IDs say
+  // nothing, so those fall back to the carousel's label and the photo's place
+  // in it — "Haiti, photo 3 of 17" — which at least tells a screen reader
+  // user where they are.
+  var MEANINGLESS = /^(img|imgp|dsc[nf]?|pxl|mvimg|photo|image|media|screenshot|cam)[\s_-]*\d|[0-9a-f]{8}-[0-9a-f]{4}-/i;
+
+  function altFor(name, label, n, total) {
+    var base = name.replace(/\.[^.]+$/, '');
+    var words = base.replace(/[-_]+/g, ' ').replace(/^\s*\d+\s*/, '').trim();
+    if (/[a-z]{3,}/i.test(words) && !MEANINGLESS.test(base) && !COVER.test(name)) {
+      return words.charAt(0).toUpperCase() + words.slice(1);
+    }
+    return (label ? label + ', photo ' : 'Photo ') + n + ' of ' + total;
   }
 
   document.querySelectorAll('[data-carousel]').forEach(function (root) {
     var track = root.querySelector('.carousel-track');
     if (!track) return;
     var dir = root.getAttribute('data-photos') || 'Photos/';
+    var label = root.getAttribute('data-label') || '';
 
     // Controls stay out of the way until we know there is something to control
     // — an empty or single-photo folder should not get Previous and Next.
@@ -116,11 +133,15 @@
         var li = document.createElement('li');
         li.className = 'carousel-slide';
         var img = document.createElement('img');
-        img.src = dir + name.split('/').map(encodeURIComponent).join('/');
-        img.alt = altFor(name);
-        // The first one is what you see on arrival; the rest can wait until
-        // they are scrolled towards.
-        if (i) img.loading = 'lazy';
+        // Folder names have spaces ("Grace Life"), so encode the folder as a
+        // path and the file as a single segment.
+        img.src = encodeURI(dir) + encodeURIComponent(name);
+        img.alt = altFor(name, label, i + 1, names.length);
+        // The gallery holds well over a hundred photos across several strips.
+        // Lazy loading still fetches whatever is on screen straight away; the
+        // rest wait until they are scrolled towards.
+        img.loading = 'lazy';
+        img.decoding = 'async';
         li.appendChild(img);
         track.appendChild(li);
       });
@@ -159,7 +180,11 @@
       });
     }
 
-    if (dotsWrap) {
+    // A dot per photo stops being usable well before it stops fitting: 88 of
+    // them ran to 1600px and pushed the whole page sideways. Past a dozen the
+    // "12 / 88" counter says where you are better than a row of dots can.
+    if (dotsWrap && total > MAX_DOTS) dotsWrap.hidden = true;
+    else if (dotsWrap) {
       for (var i = 0; i < total; i++) {
         (function (n) {
           var dot = document.createElement('button');

@@ -11,18 +11,18 @@ Live at <https://yoi.eedeb.dev>
 index.html              About Us — serves as the homepage
 news.html               Field dispatches (Haiti, Kenya)
 get-involved.html       Programs, cost breakdown, contact
-gallery.html            Photo carousel
+gallery.html            Ministry covers, then one photo carousel per folder
 site.css                All styling for every page
-site.js                 Copyright year, scroll reveals, gallery carousel
+site.js                 Copyright year, scroll reveals, gallery carousels
 YOIBrochure.pdf         The printed brochure; linked from three pages, and the
-                        source of record for the copy, the logo and the photos
+                        source of record for the copy and the logo
 assets/                 Logo artwork and icons (generated — see below)
-Photos/                 The gallery. Whatever is in here is what the page shows
+Photos/                 The gallery, one folder per section. See below
 photos.json             Index of Photos/, for hosts that can't list a directory
 tools/extract-logo.py   Regenerates assets/ from the brochure
-tools/extract-photos.py Pulls the brochure's four photographs into Photos/
+tools/prepare-photos.py Strips GPS, converts HEIC, resizes. Run before committing
 tools/build-photo-manifest.py   Rewrites photos.json from Photos/
-.github/workflows/photos.yml    Reruns that on every push touching Photos/
+.github/workflows/photos.yml    Runs both on every push touching Photos/
 .nojekyll               Tells GitHub Pages to serve the files as-is
 ```
 
@@ -54,19 +54,78 @@ would wash out. Do not put `yoi-logo.png` or `yoi-mark.png` on a dark band.
 
 ## The gallery
 
-**To add a photo, put the file in `Photos/`.** Nothing else. No list to edit,
-no markup to touch. `gallery.html` ships with an empty track and `site.js`
-fills it from whatever is in the folder. Remove a file and it's gone; rename
-files to reorder them, since they sort by name with numbers read as numbers
-(so `2` comes before `10`, and an `01-` prefix is enough to arrange them).
+`Photos/` holds one folder per gallery section:
 
-Filenames double as alt text — `children-waving.jpg` is announced as "Children
-waving" — so a descriptive filename is how you describe a photo to somebody
-using a screen reader. A camera's `IMG_4821.jpg` reads as itself, which is no
-worse than nothing. Any leading number is stripped, so ordering prefixes are
-not read out. `jpg`, `png`, `gif`, `webp`, `avif` and `svg` are picked up.
+```
+Photos/Grace Life/            current ministry, Situma, Kenya
+Photos/Maisha/                current ministry, Kenya
+Photos/Haiti/                 current ministry
+Photos/Blast from the Past/   historic photos, clippings and keepsakes
+```
 
-### How it finds them
+They came from the organisation's iCloud shared albums of the same names. The
+"Uganda" album was left out on purpose, and the old brochure placeholders are
+gone.
+
+**To add a photo, put the file in its folder.** Nothing else. No list to edit,
+no markup to touch. Each carousel in `gallery.html` names its folder in
+`data-photos` and ships empty; `site.js` fills it from whatever is in there.
+Remove a file and it's gone; rename files to reorder them, since they sort by
+name with numbers read as numbers (so `2` comes before `10`).
+
+**`cover.jpg` is special.** In each ministry folder it is the picture on that
+ministry's card at the top of the gallery, and it always leads the carousel.
+Swap a cover by replacing that one file. The covers are the three from the
+"Three pictures" album; each is also in its own ministry's album, which is how
+they were matched up.
+
+**A new section** is a copy of one of the `<section class="gallery-section">`
+blocks in `gallery.html` pointed at a new folder.
+
+A descriptive filename doubles as alt text: `children-waving.jpg` is announced
+as "Children waving". Camera names, bare numbers and random IDs say nothing,
+so those fall back to the section and position instead — "Haiti, photo 3 of
+17". The imported photos are numbered `01.jpg`, `02.jpg`... in the order they
+were taken, so they all read that way.
+
+Past a dozen photos a carousel drops its dots and relies on the "3 / 17"
+counter. A dot per photo stopped being usable long before it stopped fitting,
+and 88 of them pushed the whole page sideways.
+
+### Photos are cleaned before they are published
+
+Photos straight off a phone are not fit to put on a public page, and
+`tools/prepare-photos.py` fixes that for everything in `Photos/`:
+
+- **Location.** Most phone photos carry GPS coordinates; 49 of the imported
+  ones did, some of them pointing at schools and homes. Every photo is
+  re-encoded with all metadata dropped.
+- **Format.** iPhones save HEIC, which Chrome and Firefox cannot display. It is
+  converted to JPEG, and so are photos that were saved as PNG.
+- **Size.** Originals run to 4032px and several megabytes. They are shrunk to
+  1800px on the long edge; the imported albums went from about 300MB to 40MB.
+- **Letterboxing.** Phone screenshots of portrait photos come with black bars,
+  which are trimmed.
+- **Colour.** iPhone photos are Display P3. They are converted to sRGB rather
+  than having the profile thrown away, which would leave them looking flat.
+
+Photos it has already prepared are left alone, so it is safe to run any time:
+
+```bash
+python3 tools/prepare-photos.py      # needs: pip install pillow pillow-heif
+```
+
+The Photos workflow runs it on every push that touches `Photos/`. **But the
+workflow only fixes what the site serves, not the history.** A photo uploaded
+as-is is still in the commit that added it, GPS and all. To keep a location out
+of the repository entirely, run the script before committing.
+
+Four prints in the archive were photographed lying flat and came out sideways,
+and one entry was a screenshot of an email; those were rotated and cropped by
+hand during the import. Their numbers are 50, 51, 55, 62 and 65 in
+`Blast from the Past`.
+
+### How the gallery finds them
 
 A browser cannot read a directory off a static host, so it takes two goes:
 
@@ -76,29 +135,14 @@ A browser cannot read a directory off a static host, so it takes two goes:
    reload, there it is.
 2. **Fall back to `photos.json`.** GitHub Pages serves no listings and 404s
    that first request, which is harmless but does show up in the network panel.
-   `tools/build-photo-manifest.py` writes the file, and the Photos workflow
-   reruns it on every push that touches `Photos/` and commits the result — so
-   a photo uploaded through the GitHub web interface appears on its own, once
-   the action and the Pages deploy finish. Run the script by hand if you want
-   the manifest to match before committing.
+   `tools/build-photo-manifest.py` writes the file, mapping each folder to its
+   photos, and the Photos workflow reruns it after preparing the photos — so a
+   photo uploaded through the GitHub web interface appears on its own once the
+   action and the Pages deploy finish.
 
-The workflow only watches `Photos/` and only ever writes `photos.json` at the
-repo root, so the commit it makes cannot set it off again.
-
-### The four that came with it
-
-`Photos/` starts out with the four photographs printed in the brochure.
-`tools/extract-photos.py` cut them out of the composited pages at 1:1 pixels —
-like the logo they are not separate embedded files. Two notes on those crops.
-Each is feathered into the paper by the layout, so the rectangles in the script
-sit just inside the solid part of the picture; including the soft edge would
-put a pale halo around the slide. And one is printed as a circle, kept round on
-transparency, because a rectangular crop of it loses the children at the edges.
-
-They cap out around 450px wide. The brochure's own rasters are 1639px across an
-11-inch sheet, roughly 150dpi, so there is no more detail to recover — that is
-the ceiling, not a setting. Replacing them is just a matter of dropping better
-files into the folder.
+The workflow's own commit cannot set it off again: pushes made with the built-in
+`GITHUB_TOKEN` never start new workflow runs, and both scripts would find
+nothing to do anyway.
 
 ## Local preview
 
@@ -140,8 +184,8 @@ deploying a change to `site.css` or `site.js`, either purge the Cloudflare cache
 or bump the version string in every page's `<link>` and `<script>` tags:
 
 ```html
-<link href="site.css?v=6" rel="stylesheet">
-<script src="site.js?v=6"></script>
+<link href="site.css?v=7" rel="stylesheet">
+<script src="site.js?v=7"></script>
 ```
 
 Bumping the version is the more reliable of the two — it makes the URL new, so
@@ -204,11 +248,10 @@ Typography steps down at 560px and again at 360px.
 
 Content that still needs resolving before this is fully accurate:
 
-- **Gallery photographs** — the page is built and reads whatever is in
-  `Photos/`, but the only photographs we have are the four lifted out of the
-  brochure, and they are small. The original gallery from the old site has not
-  been recovered from the Wayback Machine. Better files can just be dropped
-  into the folder.
+- **Ministry details** — the gallery names each ministry and, where it is
+  known, the place: Grace Life in Situma, Kenya, and Maisha in Kenya. Haiti has
+  no town given, and nothing on the site yet says what each ministry does. A
+  line or two from the people running them would fill that in.
 - **Sixteenth country** — the brochure lists fifteen: Benin, Congo, Haiti,
   Indonesia, Ghana, Guatemala, Kenya, Moldova, Romania, Rwanda, Sierra Leone,
   Sudan, Uganda, United States and Zambia. The homepage marquee carries a

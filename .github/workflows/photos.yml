@@ -1,12 +1,23 @@
-name: Photo manifest
+name: Photos
 
-# GitHub Pages cannot list a directory, so the gallery falls back to
-# photos.json. This keeps that file in step with the Photos folder: add a photo
-# through the web interface or a push, and the gallery picks it up without
-# anyone editing a list by hand.
+# Runs whenever something under Photos/ changes, so a photo uploaded through
+# the GitHub web interface is made fit to publish and appears in the gallery
+# without anyone running anything by hand:
 #
-# The trigger only watches Photos/, and the job only ever writes photos.json at
-# the repo root, so the commit it makes cannot set the workflow off again.
+#   1. tools/prepare-photos.py strips location and camera metadata, converts
+#      iPhone HEIC (which most browsers cannot show), trims letterboxing and
+#      shrinks oversized files. Already-prepared photos are left alone.
+#   2. tools/build-photo-manifest.py rewrites photos.json, which the gallery
+#      needs on GitHub Pages because Pages will not list a folder.
+#
+# The commit this makes cannot set the workflow off again: pushes made with
+# the built-in GITHUB_TOKEN never start new workflow runs. Both steps are
+# idempotent besides, so a second run would find nothing to do.
+#
+# Note what this does NOT do: the photo as uploaded is still in the commit
+# that added it, metadata and all. It fixes what the site serves, not the
+# repository's history. To keep a location out of the history entirely, run
+# tools/prepare-photos.py locally before committing.
 
 on:
   push:
@@ -18,21 +29,29 @@ permissions:
   contents: write
 
 jobs:
-  manifest:
+  photos:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - run: python3 tools/build-photo-manifest.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Commit the manifest if it changed
+      - run: pip install pillow pillow-heif
+
+      - run: python tools/prepare-photos.py
+
+      - run: python tools/build-photo-manifest.py
+
+      - name: Commit if anything changed
         run: |
-          if [ -n "$(git status --porcelain photos.json)" ]; then
+          git add -A Photos photos.json
+          if git diff --cached --quiet; then
+            echo 'Photos already prepared and indexed'
+          else
             git config user.name  'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add photos.json
-            git commit -m 'Rebuild photo manifest'
+            git commit -m 'Prepare photos and rebuild manifest'
             git push
-          else
-            echo 'photos.json already up to date'
           fi
