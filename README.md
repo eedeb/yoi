@@ -8,10 +8,12 @@ Live at <https://yoi.eedeb.dev>
 ## Structure
 
 ```
-index.html              About Us — serves as the homepage
+index.html              Home: short introduction, how we work, the three ministries
+ministries.html         Each ministry's full story, needs, website and photos
+history.html            Dr. Niemeyer's story, countries reached, archive photos
 news.html               Field dispatches (Haiti, Kenya)
-get-involved.html       Programs, cost breakdown, contact
-gallery.html            Ministry covers, then one photo carousel per folder
+get-involved.html       Ways to help, what a gift covers, contact
+gallery.html            Redirect only: old links land on ministries.html
 site.css                All styling for every page
 site.js                 Copyright year, scroll reveals, gallery carousels
 YOIBrochure.pdf         The printed brochure; linked from three pages, and the
@@ -57,9 +59,9 @@ would wash out. Do not put `yoi-logo.png` or `yoi-mark.png` on a dark band.
 `Photos/` holds one folder per gallery section:
 
 ```
-Photos/Grace Life/            current ministry, Situma, Kenya
-Photos/Maisha/                current ministry, Kenya
-Photos/Haiti/                 current ministry
+Photos/Grace Life/            Grace Life Bible College, Webuye, Kenya
+Photos/Maisha/                Maisha Project, Kenya
+Photos/Haiti/                 Institution Puits Jacob, Montrouis, Haiti
 Photos/Blast from the Past/   historic photos, clippings and keepsakes
 ```
 
@@ -68,19 +70,20 @@ They came from the organisation's iCloud shared albums of the same names. The
 gone.
 
 **To add a photo, put the file in its folder.** Nothing else. No list to edit,
-no markup to touch. Each carousel in `gallery.html` names its folder in
+no markup to touch. Each carousel (three on `ministries.html`, the archive on
+`history.html`) names its folder in
 `data-photos` and ships empty; `site.js` fills it from whatever is in there.
 Remove a file and it's gone; rename files to reorder them, since they sort by
 name with numbers read as numbers (so `2` comes before `10`).
 
 **`cover.jpg` is special.** In each ministry folder it is the picture on that
-ministry's card at the top of the gallery, and it always leads the carousel.
+ministry's summary card on the home page, and it always leads the carousel.
 Swap a cover by replacing that one file. The covers are the three from the
 "Three pictures" album; each is also in its own ministry's album, which is how
 they were matched up.
 
-**A new section** is a copy of one of the `<section class="gallery-section">`
-blocks in `gallery.html` pointed at a new folder.
+**A new carousel** is a copy of one of the `<div class="carousel" data-carousel>`
+blocks pointed at a new folder.
 
 A descriptive filename doubles as alt text: `children-waving.jpg` is announced
 as "Children waving". Camera names, bare numbers and random IDs say nothing,
@@ -244,29 +247,33 @@ the apparent motion stays constant.
 All layouts collapse to a single column at 820px. Header restructures at 760px.
 Typography steps down at 560px and again at 360px.
 
+## Where the copy comes from
+
+The ministry stories, the introduction and the history were rewritten in
+October 2026 from an update written by the ministry ("claude update yoi.pdf"),
+which also asked for the 96% giving note. The brochure's vision and mission
+statements still stand on the home page.
+
 ## Outstanding
 
 Content that still needs resolving before this is fully accurate:
 
-- **Ministry details** — the gallery names each ministry and, where it is
-  known, the place: Grace Life in Situma, Kenya, and Maisha in Kenya. Haiti has
-  no town given, and nothing on the site yet says what each ministry does. A
-  line or two from the people running them would fill that in.
-- **Sixteenth country** — the brochure lists fifteen: Benin, Congo, Haiti,
-  Indonesia, Ghana, Guatemala, Kenya, Moldova, Romania, Rwanda, Sierra Leone,
-  Sudan, Uganda, United States and Zambia. The homepage marquee carries a
-  sixteenth, Malawi, flagged "Newest", and the headline and footer both say
-  sixteen. Malawi appears in no source we have. Confirm it or drop it and change
-  the count back to fifteen in `index.html`.
-- **Cost figures** — the amounts on get-involved.html ($15, $10, $20, $20) match
-  the brochure exactly, but the brochure is undated. Verify against current
-  field costs.
+- **Puits Jacob's Facebook page** — the update linked it only as
+  "facebook.com", which goes to Facebook's front page. Until the real page
+  address is known, the button on ministries.html opens a Facebook search for
+  the school's name. Replace its `href` (there is a TODO beside it).
+- **Grace Life's books** — the update says one place that two containers held
+  13,000 books, and another that they held over 23,000. The site uses "more
+  than 23,000". Confirm which is right.
+- **Project Peanut Butter** — the update calls it "The Peanut Butter Project";
+  the DVD in the archive photos is titled "The Story of Project Peanut Butter",
+  which is the name the history page uses. Confirm.
+- **Sixteenth country** — the brochure lists fifteen countries where YOI
+  supported clinics. The history page's list carries a sixteenth, Malawi, which
+  came from the old website and appears in no other source (Project Peanut
+  Butter does work there). Confirm it, or drop it and say fifteen.
 - **News dates** — both dispatches are undated. Commented markup marks where a
-  date goes in each article. Note the dispatches cover Haiti and Kenya, while
-  the brochure's front panel names Gulu, Darfur, Freetown and Guatemala as the
-  active fields; the homepage now lists the latter.
-- **Plumpy'Nut video** — the original was Flash and is unplayable. A placeholder
-  block on index.html marks where a YouTube or Vimeo embed should go.
+  date goes in each article.
 - **Verify before publishing** — the 501(c)(3) registration, the PayPal button
   (`3YQ8JTTSHS934`), the phone number and the AOL address all date to 2021 or
   earlier and should be confirmed live.
