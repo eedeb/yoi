@@ -104,20 +104,20 @@ p:last-child{margin-bottom:0}
 }
 .give-link:hover{background:var(--espresso)}
 
+/* On phones the logo takes the first row to itself, and the page links share
+   the second with Donate, which comes last. The divider belongs to the logo
+   row so it runs the full width above both. */
 @media(max-width:760px){
-  .masthead .wrap{gap:.6rem 1rem;min-height:0;padding-block:.6rem}
-  .mark{flex:1 1 auto;gap:.55rem}
+  .masthead .wrap{gap:.55rem 1rem;min-height:0;padding-block:.6rem}
+  .mark{flex:1 1 100%;gap:.55rem;padding-bottom:.6rem;border-bottom:1px solid var(--line)}
   .mark img{height:32px}
   .mark-name{font-size:.92rem}
-  .give-link{order:2;padding:.65rem 1rem;min-height:44px}
-  .masthead nav{
-    order:3;flex-basis:100%;margin-left:0;
-    justify-content:space-between;gap:.4rem;
-    border-top:1px solid var(--line);padding-top:.5rem;
-  }
+  .masthead nav{order:2;flex:1 1 auto;margin-left:0;justify-content:flex-start;gap:1.25rem}
   .masthead nav a{font-size:.66rem;letter-spacing:.07em;padding:.35rem 0}
+  .give-link{order:3;margin-left:auto;padding:.65rem 1rem;min-height:44px}
 }
 @media(max-width:360px){
+  .masthead nav{gap:.9rem}
   .masthead nav a{font-size:.6rem;letter-spacing:.04em}
 }
 
@@ -238,6 +238,9 @@ section{padding:clamp(4rem,9vw,7rem) 0}
   max-width:34ch;margin:0;text-wrap:balance;
 }
 .pledge em{font-style:italic;color:var(--flame-deep)}
+/* A quotation set like the pledge, with its attribution underneath. */
+.quote{margin-top:clamp(2.5rem,5vw,3.5rem)}
+.quote-by{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin:.9rem 0 0}
 
 /* ---------- three-up grid (goals / ways to help) ---------- */
 .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-strong);border:1px solid var(--line-strong)}

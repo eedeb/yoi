@@ -11,8 +11,6 @@ Live at <https://yoi.eedeb.dev>
 index.html              Home: short introduction, how we work, the three ministries
 ministries.html         Each ministry's full story, needs, website and photos
 history.html            Dr. Niemeyer's story, countries reached, archive photos
-news.html               Field dispatches (Haiti, Kenya)
-get-involved.html       Ways to help, what a gift covers, contact
 gallery.html            Redirect only: old links land on ministries.html
 site.css                All styling for every page
 site.js                 Copyright year, scroll reveals, gallery carousels
@@ -249,21 +247,21 @@ Typography steps down at 560px and again at 360px.
 
 ## Where the copy comes from
 
-The home, ministries and history pages are built from an October 2026 update
-written by the ministry ("claude update yoi.pdf"). **Its text is used word for
-word**, changed only to fix grammar and punctuation. Do not paraphrase it. The
-only places it is not verbatim are the ones the update itself asked for:
+The words on the site belong to the ministry. **Use them word for word; do not
+paraphrase.** They come from two documents written by the ministry:
 
-- the opening paragraph on the home page, which combines its two introductory
-  paragraphs into a shorter version (the full text is on history.html);
-- the short summary on each ministry card on the home page;
-- Haiti's section, which it asked to have reorganized, with the goat program
-  condensed;
-- the note that about 96% of donations go directly to the ministries.
+- **"YOI website first editing page" (November 2026)** — everything on the home
+  page: the opening paragraph, "Our purpose", "Our desire", the ministries
+  introduction and the three summary cards, the vision and mission statements,
+  the closing quote, the giving line, and the footer's description and phone
+  number. Used exactly as written.
+- **"claude update yoi.pdf" (October 2026)** — the ministries and history pages,
+  changed only to fix grammar and punctuation. Haiti's section was reorganized
+  and its goat program condensed, because that document asked for it.
 
-Everything else on the site that the update does not cover (the news
-dispatches, the brochure's vision and mission, Get Involved, contact and
-giving details) is the site's earlier copy, unchanged.
+The 96% note is the ministry's own sentence from the October update. The News
+and Get Involved pages were taken down at the ministry's request in November
+2026; they are in the git history if they are ever wanted back.
 
 ## Outstanding
 
@@ -274,16 +272,10 @@ Content that still needs resolving before this is fully accurate:
   23,000. Both are printed as written. Confirm which is right.
 - **The Peanut Butter Project** — printed as the update names it. The DVD in
   the archive photos is titled "The Story of Project Peanut Butter". Confirm.
-- **Get Involved** — still the site's earlier copy. It offers short-term
-  missions trips ("Travel with us to the places we work") and costs from the
-  undated brochure, while the update says YOI is no longer traveling. Decide
-  whether to replace it with the needs listed in the update.
 - **Sixteenth country** — the brochure lists fifteen countries where YOI
   supported clinics. The history page's list carries a sixteenth, Malawi, which
   came from the old website and appears in no other source (Project Peanut
   Butter does work there). Confirm it, or drop it and say fifteen.
-- **News dates** — both dispatches are undated. Commented markup marks where a
-  date goes in each article.
 - **Verify before publishing** — the 501(c)(3) registration, the PayPal button
-  (`3YQ8JTTSHS934`), the phone number and the AOL address all date to 2021 or
-  earlier and should be confirmed live.
+  (`3YQ8JTTSHS934`) and the 43 Breeze Way address date to 2021 or earlier and
+  should be confirmed live.
