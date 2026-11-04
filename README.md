@@ -248,16 +248,18 @@ Typography steps down at 560px and again at 360px.
 ## Where the copy comes from
 
 The words on the site belong to the ministry. **Use them word for word; do not
-paraphrase.** They come from two documents written by the ministry:
+paraphrase.** They come from three documents written by the ministry:
 
 - **"YOI website first editing page" (November 2026)** — everything on the home
   page: the opening paragraph, "Our purpose", "Our desire", the ministries
   introduction and the three summary cards, the vision and mission statements,
   the closing quote, the giving line, and the footer's description and phone
   number. Used exactly as written.
-- **"claude update yoi.pdf" (October 2026)** — the ministries and history pages,
-  changed only to fix grammar and punctuation. Haiti's section was reorganized
-  and its goat program condensed, because that document asked for it.
+- **"YOI website expanded ministries" (November 2026)** — the ministries page:
+  each ministry's full story, its needs and its website link, plus the page
+  heading. Used exactly as written, apart from grammar and punctuation.
+- **"claude update yoi.pdf" (October 2026)** — the history page, changed only
+  to fix grammar and punctuation.
 
 The 96% note is the ministry's own sentence from the October update. The News
 and Get Involved pages were taken down at the ministry's request in November
@@ -267,9 +269,6 @@ and Get Involved pages were taken down at the ministry's request in November
 
 Content that still needs resolving before this is fully accurate:
 
-- **Grace Life's books** — the update says in one place that the library
-  received 13,000 Christian books and in another that two containers held over
-  23,000. Both are printed as written. Confirm which is right.
 - **The Peanut Butter Project** — printed as the update names it. The DVD in
   the archive photos is titled "The Story of Project Peanut Butter". Confirm.
 - **Sixteenth country** — the brochure lists fifteen countries where YOI
