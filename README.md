@@ -10,12 +10,12 @@ Live at <https://yoi.eedeb.dev>
 ```
 index.html              Home: short introduction, how we work, the three ministries
 ministries.html         Each ministry's full story, needs, website and photos
-history.html            Dr. Niemeyer's story, countries reached, archive photos
+history.html            YOI's history, archive photos, then countries reached
 gallery.html            Redirect only: old links land on ministries.html
 site.css                All styling for every page
 site.js                 Copyright year, scroll reveals, gallery carousels
-YOIBrochure.pdf         The printed brochure; linked from three pages, and the
-                        source of record for the copy and the logo
+YOIBrochure.pdf         The printed brochure. Not linked from the site any more,
+                        but kept: tools/extract-logo.py reads the logo from it
 assets/                 Logo artwork and icons (generated — see below)
 Photos/                 The gallery, one folder per section. See below
 photos.json             Index of Photos/, for hosts that can't list a directory
@@ -258,10 +258,10 @@ paraphrase.** They come from three documents written by the ministry:
 - **"YOI website expanded ministries" (November 2026)** — the ministries page:
   each ministry's full story, its needs and its website link, plus the page
   heading. Used exactly as written, apart from grammar and punctuation.
-- **"claude update yoi.pdf" (October 2026)** — the history page, changed only
-  to fix grammar and punctuation.
+- **"YOI NEW website history page to use" (November 2026)** — the history
+  page text. Used exactly as written, bold included.
 
-The 96% note is the ministry's own sentence from the October update. The News
+The 96% note is the ministry's own sentence from its October 2026 update. The News
 and Get Involved pages were taken down at the ministry's request in November
 2026; they are in the git history if they are ever wanted back.
 
